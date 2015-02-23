@@ -7,21 +7,24 @@ import java.util.Scanner;
 public class EnemyGenerator {
 	
 	ArrayList<Enemy> enemyList;
-	ArrayList<String> mobs = new ArrayList<String>();
+	ArrayList<String[]> mobs = new ArrayList<String[]>();
 	
 	public EnemyGenerator(){
 		Scanner reader = new Scanner("EnemyList.txt");
-		Random rd = new Random();
-		ItemGenerator items = new ItemGenerator();
+		
 		while(reader.hasNext()){
-			String mob[] = reader.nextLine().split(",");
-			enemyList.add(new Enemy(mob[0],mob[1],Integer.parseInt(mob[2]),1,rd.nextInt(10 + 1),items.generator()));
+			mobs.add(reader.nextLine().split(","));
+			
 		}
 	}
 	
 	public Enemy generateEnemy(int level){
 		Random rd = new Random();
-		return enemyList.get(rd.nextInt(enemyList.size()));
+		ItemGenerator items = new ItemGenerator();
+		int index = rd.nextInt(enemyList.size());
+		return new Enemy(mobs.get(index)[0],mobs.get(index)[1],
+				Integer.parseInt(mobs.get(index)[2]),1
+				,rd.nextInt(10 + 1),items.generator());
 	}
 
 }
