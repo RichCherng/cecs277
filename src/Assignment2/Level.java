@@ -13,7 +13,8 @@ public class Level {
 	}
 	
 	public char getRoom(Point l){
-		if(l.getY() < level.length && l.getX() < level[0].length){
+		if(l.getY() < level.length && l.getY() >= 0 && 
+				l.getX() < level[0].length && l.getX() >= 0){
 			return level[(int) l.getY()][(int) l.getX()];
 		}
 		else{
