@@ -98,8 +98,7 @@ public class Hero extends Character{
 	
 	@Override
 	public void attack(Character c) {
-		// TODO Auto-generated method stub
-		
+				
 	}
 	
 }

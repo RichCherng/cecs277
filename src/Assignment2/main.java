@@ -9,8 +9,10 @@ public class main {
 		Scanner reader = new Scanner(System.in);
 		Hero hero;
 		Level map = new Level();
+		int lev = 1;
+		EnemyGenerator enemyGen = new EnemyGenerator();
 		try {
-			map.generateLevel(1);
+			map.generateLevel(lev);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -20,6 +22,17 @@ public class main {
 		hero = new Hero(reader.nextLine(),"Woo hoo",map.findStartLocation());
 		while(true){
 			char map_Element = nextPosition(reader, hero, map);
+			switch(map_Element){
+			case 's':
+				// sell item
+				break;
+			case 'i':
+				//recieve item
+				break;
+			case 'm':
+				fight(hero,enemyGen.generateEnemy(lev));
+				break;
+			}
 		}
 		
 		/*
@@ -30,6 +43,27 @@ public class main {
 		
 		//System.out.println("What is your name, traveler ? ");
 		//reader.nextLine();
+	}
+	
+	public static void fight(Hero hero, Enemy enemy){
+		int action;
+		while(hero.getHp() > 0 || enemy.getHp() > 0){
+			System.out.printf("%s has %d health.", hero.getName(),hero.getHp());
+			System.out.printf("%n%s has encountered %s%nIt has %d health.",hero.getName(),enemy.getName(),enemy.getHp());
+			System.out.println("What do you do?\n1. Run Away\n2. Attack\n");
+			action = checkInt(1,2);
+			switch(action){
+			case 1:
+				break;
+			case 2:
+				hero.attack(enemy);
+				enemy.attack(enemy);
+				break;
+			case 3:
+				break;
+			}
+		}
+		
 	}
 	
 	public static char nextPosition(Scanner reader, Hero hero, Level map){
@@ -85,6 +119,28 @@ public class main {
 			}
 		}
 		return read;
+	}
+	
+	public static int checkInt(int low, int high){
+		Scanner in = new Scanner(System.in);
+		boolean valid = false;
+		int validNum = 0;
+		
+		while(!valid){
+			
+			if(in.hasNextInt()){
+				validNum = in.nextInt();
+				if(validNum >= low && validNum <= high){
+					valid = true;
+				}else{
+					System.out.print("Invalid- Retry: ");
+				}
+			}else {
+				in.next();
+				System.out.println("Invalid input- Retry: ");
+			}
+		}
+		return validNum;
 	}
 	
 }
