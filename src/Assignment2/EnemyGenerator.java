@@ -8,16 +8,21 @@ import java.util.Scanner;
 
 public class EnemyGenerator {
 	
-	ArrayList<Enemy> enemyList;
-	ArrayList<String[]> mobs = new ArrayList<String[]>();
+	ArrayList<Enemy> enemyList = new ArrayList<Enemy>();
+	ItemGenerator items = new ItemGenerator();
 	
 	public EnemyGenerator(){
 		Scanner reader;
 		try {
 			reader = new Scanner(new File("EnemyList.txt"));
 			while(reader.hasNext()){
-				mobs.add(reader.nextLine().split(","));
-				
+				String[] mob = reader.nextLine().split(",");
+				enemyList.add(new Enemy(mob[0],
+										mob[1],
+										Integer.parseInt(mob[2]),
+										1,
+										10,
+										items.generator()));
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -28,12 +33,10 @@ public class EnemyGenerator {
 	
 	public Enemy generateEnemy(int level){
 		Random rd = new Random();
-		ItemGenerator items = new ItemGenerator();
-		int index = rd.nextInt(mobs.size());
-		return new Enemy(mobs.get(index)[0]
-				,mobs.get(index)[1],
-				Integer.parseInt(mobs.get(index)[2]),1
-				,rd.nextInt(10 + 1),items.generator());
+		int index = rd.nextInt(enemyList.size());
+		return new Enemy(enemyList.get(index).getName()
+				,enemyList.get(index).getQuip(),
+				10*level,level,rd.nextInt(10 + 1),items.generator());
 	}
 
 }
