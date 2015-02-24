@@ -4,13 +4,14 @@ import java.io.Serializable;
 
 public abstract class Character implements Serializable{
 	private String name,quip;
-	private int level, hp, gold;
+	private int level, hp, gold, baseHp;
 	
 	public Character(String n, String q, int h, int l,int g){
 		name = n;
 		quip = q;
 		level = l;
 		hp = h;
+		baseHp = h;
 		gold = g;
 	}
 	
@@ -45,7 +46,11 @@ public abstract class Character implements Serializable{
 	}
 	
 	public void heal(int h){
-		hp += h;
+		if((hp += h) >= baseHp){
+			hp = baseHp;
+		}
+		else
+			hp += h;
 	}
 	
 	public void takeDamage(int h){
@@ -60,6 +65,6 @@ public abstract class Character implements Serializable{
 	}
 	
 	public void display(){
-		
+		System.out.printf("%s has %d health.", getName(),getHp());
 	}
 }

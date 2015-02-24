@@ -163,7 +163,7 @@ public class main {
 	public static boolean fight(Hero hero, Enemy enemy,Level map){
 		int action = 0;
 		while(hero.getHp() > 0 && enemy.getHp() > 0){
-			System.out.printf("%s has %d health.", hero.getName(),hero.getHp());
+			hero.display();
 			System.out.printf("%n%s has encountered %s%nIt has %d health.%n",hero.getName(),enemy.getName(),enemy.getHp());
 			if(hero.checkForHealthPotion()){
 				System.out.println("What do you do?\n1. Run Away\n2. Attack\n3. Use Health Potion ");
