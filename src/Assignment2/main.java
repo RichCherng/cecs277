@@ -210,10 +210,7 @@ public class main {
 					if(!hero.pickUpItem(enemy.getItem())){
 						System.out.printf("Cannot Pick up Item, Bag is full\n"
 								+ "Item sold for %d%n",enemy.getItem().getValue());
-					}
-					else
-					{
-						hero.pickUpItem(enemy.getItem());
+						hero.removeItem(enemy.getItem());
 					}
 				}
 				else
