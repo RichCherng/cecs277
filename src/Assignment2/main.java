@@ -49,7 +49,7 @@ public class main {
 		int action;
 		while(hero.getHp() > 0 || enemy.getHp() > 0){
 			System.out.printf("%s has %d health.", hero.getName(),hero.getHp());
-			System.out.printf("%n%s has encountered %s%nIt has %d health.",hero.getName(),enemy.getName(),enemy.getHp());
+			System.out.printf("%n%s has encountered %s%nIt has %d health.%n",hero.getName(),enemy.getName(),enemy.getHp());
 			System.out.println("What do you do?\n1. Run Away\n2. Attack\n");
 			action = checkInt(1,2);
 			switch(action){
@@ -57,7 +57,7 @@ public class main {
 				break;
 			case 2:
 				hero.attack(enemy);
-				enemy.attack(enemy);
+				enemy.attack(hero);
 				break;
 			case 3:
 				break;

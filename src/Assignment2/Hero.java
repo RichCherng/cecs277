@@ -2,15 +2,17 @@ package Assignment2;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Hero extends Character{
 	
 	ArrayList<Item> items;
 	Point location;
 	int MAX_ITEMS = 5;
+	int level = 1;
 	
 	public Hero(String n, String q, Point start) {
-		super(n, q, 10, 1, 0);
+		super(n, q, 10 , 1, 0);
 		location = start;
 		items = new ArrayList<Item>();
 	}
@@ -98,7 +100,10 @@ public class Hero extends Character{
 	
 	@Override
 	public void attack(Character c) {
-				
+		Random rd = new Random();
+		int damage = rd.nextInt(15 * getLevel());
+		System.out.printf("%s hit a %s for %d damage.%n",getName(),c.getName(),damage);
+		c.takeDamage(damage);
 	}
 	
 }

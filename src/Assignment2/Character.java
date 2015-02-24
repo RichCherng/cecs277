@@ -18,6 +18,14 @@ public abstract class Character {
 		return name;
 	}
 	
+	public void setLevel(int le){
+		level = le;
+	}
+	
+	public int getLevel(){
+		return level;
+	}
+	
 	public String getQuip(){
 		return quip;
 	}
@@ -39,7 +47,10 @@ public abstract class Character {
 	}
 	
 	public void takeDamage(int h){
-		hp -= h;
+		if(hp - h < 0){
+			hp = 0;
+		} else
+			hp -= h;
 	}
 	
 	public void collectGold(int g){
