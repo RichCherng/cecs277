@@ -1,26 +1,57 @@
 package Assignment2;
 
 import java.awt.Point;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Random;
 import java.util.Scanner;
 
 public class main {
 	public static void main(String[] args){
 		Scanner reader = new Scanner(System.in);
-		Hero hero;
+		int MAX_LEVEL = 3;
+		Hero hero = null;
 		Level map = new Level();
+		File f = new File("hero.dat");
 		boolean running = true;
-		int lev = 1;
+		
+		if(f.exists()){
+			try {
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream(f));
+				try {
+					hero = (Hero) in.readObject();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				in.close();	
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else {
+			System.out.print("What is your name, traveler? ");
+			hero = new Hero(reader.nextLine(),"Woo hoo",new Point(0,0));
+		}
+		int lev = hero.getLevel();
 		EnemyGenerator enemyGen = new EnemyGenerator();
 		try {
 			map.generateLevel(lev);
+			hero.setLocation(map.findStartLocation());
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		System.out.print("What is your name, traveler? ");
-		hero = new Hero(reader.nextLine(),"Woo hoo",map.findStartLocation());
 		while(running){
 			char map_Element = nextPosition(reader, hero, map);
 			switch(map_Element){
@@ -34,7 +65,33 @@ public class main {
 				foundItem(hero);
 				break;
 			case 'm':
-				running = fight(hero,enemyGen.generateEnemy(lev));
+				running = fight(hero,enemyGen.generateEnemy(lev),map);
+				break;
+			case 'f':
+				
+				lev++;
+				if(lev > MAX_LEVEL)
+					running = false;
+				try {
+					map.generateLevel(lev);
+					hero.setLocation(map.findStartLocation());
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				hero.setLevel(lev);
+				try {
+					ObjectOutputStream out = new ObjectOutputStream(
+											new FileOutputStream(f));
+					out.writeObject(hero);
+					out.close();
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				break;
 			}
 		}
@@ -50,7 +107,19 @@ public class main {
 	}
 	
 	public static void foundItem(Hero hero){
-		
+		ItemGenerator itemGen = new ItemGenerator();
+		Item found = itemGen.generator();
+		System.out.printf("You found a %s%nWhat do you do?"
+				+ "%n1. Keep it%n2. Sell it%n",found.getName());
+		int choice = checkInt(1,2);
+		if(choice == 2){
+			System.out.printf("You sell your %s for %d gold.%n",found.getName(),found.getValue());
+			hero.collectGold(found.getValue());
+		}
+		else{
+			System.out.printf("Cannot Pick up Item, Bag is full\n"
+					+ "Item sold for %d%n",found.getValue());
+		}
 	}
 	
 	public static void sellItems(Hero hero){
@@ -91,7 +160,7 @@ public class main {
 		}*/
 	}
 	
-	public static boolean fight(Hero hero, Enemy enemy){
+	public static boolean fight(Hero hero, Enemy enemy,Level map){
 		int action = 0;
 		while(hero.getHp() > 0 && enemy.getHp() > 0){
 			System.out.printf("%s has %d health.", hero.getName(),hero.getHp());
@@ -106,6 +175,29 @@ public class main {
 			}
 			switch(action){
 			case 1:
+				Random rd = new Random();
+				
+				char map_Element;
+				do{
+					int temp = rd.nextInt(4)+1;
+					switch(temp){
+					case 1:
+						map_Element = hero.goNorth(map);
+						break;
+					case 2:
+						map_Element = hero.goSouth(map);
+						break;
+					case 3:
+						map_Element = hero.gotEast(map);
+						break;
+					case 4:
+						map_Element = hero.goWest(map);
+						break;
+					default:
+						map_Element = 'n';
+					}
+				}while(map_Element == 'n');
+				
 				break;
 			case 2:
 				hero.attack(enemy);
@@ -129,12 +221,19 @@ public class main {
 					enemy.attack(hero);
 					if(hero.getHp() <= 0){
 						System.out.printf("%s killed a %s",enemy.getName(),hero.getName());
+						System.out.printf("%s say \"%s\"%n",enemy.getName(),enemy.getQuip());
 						System.out.println("Game Over");
 						return false;
 					}
 				}
 				break;
 			case 3:
+					hero.heal(15);
+					for(Item i:hero.getItems()){
+						if(i.getName().equals("Health Potion"))
+							hero.removeItem(i);
+						break;
+					}
 				break;
 			}
 		}

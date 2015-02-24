@@ -1,10 +1,11 @@
 package Assignment2;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Hero extends Character{
+public class Hero extends Character implements Serializable{
 	
 	ArrayList<Item> items;
 	Point location;

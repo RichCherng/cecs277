@@ -3,9 +3,10 @@ package Assignment2;
 import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class Level {
+public class Level implements Serializable{
 	private char[][] level;
 	
 	public Level(){
