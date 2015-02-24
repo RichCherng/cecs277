@@ -17,7 +17,7 @@ public class ItemGenerator {
 			reader = new Scanner(new File("ItemList.txt"));
 			while(reader.hasNext()){
 				String[] item = reader.nextLine().split(",");
-				itemList.add(new Item(item[0],Integer.parseInt(item[1])));
+				itemList.add(new Item(item[0].trim(),Integer.parseInt(item[1])));
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

@@ -12,9 +12,17 @@ public class Hero extends Character{
 	int level = 1;
 	
 	public Hero(String n, String q, Point start) {
-		super(n, q, 10 , 1, 0);
+		super(n, q, 25 , 1, 0);
 		location = start;
 		items = new ArrayList<Item>();
+	}
+	
+	public boolean checkForHealthPotion(){
+		for(Item i:items){
+			if(i.getName().equals("Health Potion"))
+				return true;
+		}
+		return false;
 	}
 	
 	public ArrayList<Item> getItems(){
@@ -22,7 +30,7 @@ public class Hero extends Character{
 	}
 	
 	public boolean pickUpItem(Item i){
-		if(items.size() < MAX_ITEMS){
+		if(items.size() <= MAX_ITEMS){
 			items.add(i);
 			return true;
 		}

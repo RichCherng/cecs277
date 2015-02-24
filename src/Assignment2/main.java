@@ -9,6 +9,7 @@ public class main {
 		Scanner reader = new Scanner(System.in);
 		Hero hero;
 		Level map = new Level();
+		boolean running = true;
 		int lev = 1;
 		EnemyGenerator enemyGen = new EnemyGenerator();
 		try {
@@ -20,17 +21,20 @@ public class main {
 		
 		System.out.print("What is your name, traveler? ");
 		hero = new Hero(reader.nextLine(),"Woo hoo",map.findStartLocation());
-		while(true){
+		while(running){
 			char map_Element = nextPosition(reader, hero, map);
 			switch(map_Element){
 			case 's':
 				// sell item
+				System.out.println("Sell Item : ");
+				sellItems(hero);
 				break;
 			case 'i':
 				//recieve item
+				foundItem(hero);
 				break;
 			case 'm':
-				fight(hero,enemyGen.generateEnemy(lev));
+				running = fight(hero,enemyGen.generateEnemy(lev));
 				break;
 			}
 		}
@@ -45,24 +49,97 @@ public class main {
 		//reader.nextLine();
 	}
 	
-	public static void fight(Hero hero, Enemy enemy){
-		int action;
-		while(hero.getHp() > 0 || enemy.getHp() > 0){
+	public static void foundItem(Hero hero){
+		
+	}
+	
+	public static void sellItems(Hero hero){
+		
+		System.out.println("0. quit");
+		for(int i = 0; i < hero.getItems().size(); i++){
+			System.out.printf("%d. %s%n",(i+1),hero.getItems().get(i).getName());
+		}
+		int choice = checkInt(0,hero.getItems().size());
+		if(choice != 0){
+			System.out.printf("Sell %s for %d golds.%n",hero.getItems().get(choice-1).getName(),hero.getItems().get(choice-1).getValue());
+			hero.collectGold(hero.getItems().get(choice-1).getValue());
+			hero.removeItem(choice-1);
+			sellItems(hero);
+		}
+
+		
+		/*int choice;
+		while(hero.getItems().size() > 0 )
+		for(int i = 0; i < hero.getItems().size(); i++){
+			System.out.printf("%d. hero.getItems().get(i)",(+1));
+		}
+		choice = checkInt(1,hero.getItems().size()+1);
+		if(choice == hero.getItems().size()+1)
+			break Enter;
+		else
+		{
+			
+		}*/
+		/*System.out.println("Sell all items?\n1. Yes\n2. No.");
+		int choice = checkInt(1,2);
+		if(choice == 1){
+			for(int i = 0; i < hero.getItems().size(); i++){
+				System.out.printf("Sell %s for %d golds.%n",hero.getItems().get(i).getName(),hero.getItems().get(i).getValue());
+				hero.collectGold(hero.getItems().get(i).getValue());
+				hero.removeItem(i);
+			}
+		}*/
+	}
+	
+	public static boolean fight(Hero hero, Enemy enemy){
+		int action = 0;
+		while(hero.getHp() > 0 && enemy.getHp() > 0){
 			System.out.printf("%s has %d health.", hero.getName(),hero.getHp());
 			System.out.printf("%n%s has encountered %s%nIt has %d health.%n",hero.getName(),enemy.getName(),enemy.getHp());
-			System.out.println("What do you do?\n1. Run Away\n2. Attack\n");
-			action = checkInt(1,2);
+			if(hero.checkForHealthPotion()){
+				System.out.println("What do you do?\n1. Run Away\n2. Attack\n3. Use Health Potion ");
+				action = checkInt(1,3);
+			}
+			else{
+				System.out.println("What do you do?\n1. Run Away\n2. Attack\n");
+				action = checkInt(1,2);
+			}
 			switch(action){
 			case 1:
 				break;
 			case 2:
 				hero.attack(enemy);
-				enemy.attack(hero);
+				if(enemy.getHp() <= 0){
+					System.out.printf("%s killed a %s%n",hero.getName(),enemy.getName());
+					System.out.printf("%s say \"%s\"%n",hero.getName(),hero.getQuip());
+					System.out.printf("%s receive %d gold.%n",hero.getName(),enemy.getGold());
+					System.out.printf("%s receive a %s%n",hero.getName(),enemy.getItem().getName());
+					
+					if(!hero.pickUpItem(enemy.getItem())){
+						System.out.printf("Cannot Pick up Item, Bag is full\n"
+								+ "Item sold for %d%n",enemy.getItem().getValue());
+					}
+					else
+					{
+						hero.pickUpItem(enemy.getItem());
+					}
+				}
+				else
+				{
+					enemy.attack(hero);
+					if(hero.getHp() <= 0){
+						System.out.printf("%s killed a %s",enemy.getName(),hero.getName());
+						System.out.println("Game Over");
+						return false;
+					}
+				}
 				break;
 			case 3:
 				break;
 			}
 		}
+		return true;
+		
 		
 	}
 	

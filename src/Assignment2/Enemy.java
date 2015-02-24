@@ -14,7 +14,7 @@ public class Enemy extends Character{
 	public void attack(Character c) {
 		Random rd = new Random();
 		int damage = rd.nextInt(10 * getLevel());
-		System.out.printf("%s hit a %s for %d damage.%n",getName(),c.getName(),damage);
+		System.out.printf("%s hit %s for %d damage.%n",getName(),c.getName(),damage);
 		c.takeDamage(damage);
 	}
 	

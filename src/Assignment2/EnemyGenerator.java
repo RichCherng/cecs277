@@ -30,7 +30,6 @@ public class EnemyGenerator {
 		Random rd = new Random();
 		ItemGenerator items = new ItemGenerator();
 		int index = rd.nextInt(mobs.size());
-		System.out.println(index);
 		return new Enemy(mobs.get(index)[0]
 				,mobs.get(index)[1],
 				Integer.parseInt(mobs.get(index)[2]),1

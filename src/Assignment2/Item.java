@@ -12,4 +12,8 @@ public class Item {
 	public int getValue(){
 		return goldValue;
 	}
+	
+	public String getName(){
+		return name;
+	}
 }
