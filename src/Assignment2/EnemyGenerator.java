@@ -5,14 +5,20 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
-
+/**
+ * EnemyGenerator class - representing a class that create and store enemy
+ * @author Pongsathornn Cherngchaosil
+ *
+ */
 public class EnemyGenerator {
-	
+	//list of enemy
 	ArrayList<Enemy> enemyList = new ArrayList<Enemy>();
-	
-	
+	/**
+	 * Constructor - read in file and create a list of enemy
+	 */
 	public EnemyGenerator(){
 		Scanner reader;
+		//read in and create enemy at level one from file
 		try {
 			reader = new Scanner(new File("EnemyList.txt"));
 			while(reader.hasNext()){
@@ -30,7 +36,11 @@ public class EnemyGenerator {
 		}
 		
 	}
-	
+	/**
+	 * pick random type of enemy and create one according to level
+	 * @param level level of enemy
+	 * @return enemy
+	 */
 	public Enemy generateEnemy(int level){
 		Random rd = new Random();
 		ItemGenerator items = new ItemGenerator();

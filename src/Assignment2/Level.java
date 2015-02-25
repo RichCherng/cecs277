@@ -5,14 +5,25 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.Scanner;
-
+/**
+ * Level class - representing map 
+ * @author Pongsathorn Cherngchaosil
+ *
+ */
 public class Level implements Serializable{
+	//Map in the form of 2d array
 	private char[][] level;
-	
+	/**
+	 * Constructor - create a map
+	 */
 	public Level(){
 		 level = new char[4][4];
 	}
-	
+	/**
+	 * return the element of that position
+	 * @param l position in the map
+	 * @return the elemnt of that position, return 'n' is next position is invalid
+	 */
 	public char getRoom(Point l){
 		if(l.getY() < level.length && l.getY() >= 0 && 
 				l.getX() < level[0].length && l.getX() >= 0){
@@ -23,7 +34,10 @@ public class Level implements Serializable{
 		}
 		
 	}
-	
+	/**
+	 * display the map
+	 * @param p position of the player
+	 */
 	public void displayMap(Point p){
 		System.out.println("____________");
 		for(int i = 0; i < level.length; i++){
@@ -39,7 +53,10 @@ public class Level implements Serializable{
 		}
 		System.out.println("____________");
 	}
-	
+	/**
+	 * return starting location
+	 * @return starting location in the form of Point
+	 */
 	public Point findStartLocation(){
 		if(level[0].length < 1){
 			System.out.println("Level not yet genereated!");
@@ -54,7 +71,11 @@ public class Level implements Serializable{
 		}
 		return new Point(0,0);
 	}
-	
+	/**
+	 * read in the file of that level and create a map
+	 * @param levelNum the level of the map
+	 * @throws FileNotFoundException 
+	 */
 	public void generateLevel(int levelNum) throws FileNotFoundException{
 		String fileName = "level"+levelNum+ ".txt";
 		Scanner readFile = new Scanner(new File(fileName));
