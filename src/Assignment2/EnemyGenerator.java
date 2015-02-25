@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class EnemyGenerator {
 	
 	ArrayList<Enemy> enemyList = new ArrayList<Enemy>();
-	ItemGenerator items = new ItemGenerator();
+	
 	
 	public EnemyGenerator(){
 		Scanner reader;
@@ -22,7 +22,7 @@ public class EnemyGenerator {
 										Integer.parseInt(mob[2]),
 										1,
 										10,
-										items.generator()));
+										null));
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -33,6 +33,7 @@ public class EnemyGenerator {
 	
 	public Enemy generateEnemy(int level){
 		Random rd = new Random();
+		ItemGenerator items = new ItemGenerator();
 		int index = rd.nextInt(enemyList.size());
 		return new Enemy(enemyList.get(index).getName()
 				,enemyList.get(index).getQuip(),

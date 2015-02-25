@@ -10,7 +10,7 @@ public class Level implements Serializable{
 	private char[][] level;
 	
 	public Level(){
-		
+		 level = new char[4][4];
 	}
 	
 	public char getRoom(Point l){

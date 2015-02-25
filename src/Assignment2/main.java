@@ -11,7 +11,7 @@ import java.io.ObjectOutputStream;
 import java.util.Random;
 import java.util.Scanner;
 
-public class main {
+public class Main {
 	public static void main(String[] args){
 		Scanner reader = new Scanner(System.in);
 		int MAX_LEVEL = 3;
@@ -116,7 +116,7 @@ public class main {
 			System.out.printf("You sell your %s for %d gold.%n",found.getName(),found.getValue());
 			hero.collectGold(found.getValue());
 		}
-		else{
+		else if(hero.pickUpItem(found)){
 			System.out.printf("Cannot Pick up Item, Bag is full\n"
 					+ "Item sold for %d%n",found.getValue());
 		}
