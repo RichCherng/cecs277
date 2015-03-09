@@ -12,7 +12,8 @@ public class Computer implements Serializable {
 		hash = new HashMap<Pattern, Integer>();
 	}
 
-	public void add(Pattern p) {
+	public void add(String pattern) {
+		Pattern p = new Pattern(pattern);
 		if (hash.containsKey(p))
 			hash.put(p, hash.get(p) + 1);
 		else

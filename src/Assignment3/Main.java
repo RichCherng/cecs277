@@ -58,7 +58,7 @@ public class Main {
 		
 		
 		//System.out.println(pattern);
-		computer.add(new Pattern(pattern));
+		computer.add(pattern);
 		while(running){
 			System.out.print("Choose your Move:\n1.Rock\n2.Paper\n3.Scissor\n4.Quit\n");
 			choice = checkInt(1,4);
@@ -84,7 +84,7 @@ public class Main {
 				System.out.println("You Lose!");
 				break;
 			}
-			computer.add(new Pattern(pattern));
+			computer.add(pattern);
 		}
 		
 		//Write object Computer to file.
