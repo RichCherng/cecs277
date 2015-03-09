@@ -1,6 +1,8 @@
 package Assignment3;
 
-public class Pattern {
+import java.io.Serializable;
+
+public class Pattern implements Serializable {
 	
 	private String pattern;
 	public Pattern(String p){
@@ -24,4 +26,5 @@ public class Pattern {
 	public int hashCode(){
 		return pattern.hashCode();
 	}
+	
 }

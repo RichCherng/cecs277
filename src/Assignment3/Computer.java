@@ -23,9 +23,38 @@ public class Computer implements Serializable {
 		 */
 	}
 
+	public int compare(char player, char computer) {
+		if (player == 'r') {
+			if (computer == 's')
+				return 1;
+			else if (computer == 'r')
+				return 0;
+			else
+				return -1;
+		}
+		if (player == 's') {
+			if (computer == 's')
+				return 0;
+			else if (computer == 'r')
+				return -1;
+			else
+				return 1;
+		}
+
+		if (player == 'p') {
+			if (computer == 's')
+				return -1;
+			else if (computer == 'r')
+				return 1;
+			else
+				return 0;
+		}
+		
+		return 0;
+	}
+
 	public char prediction(String pattern) {
 		if (pattern.length() != 4) {
-			System.out.println(pattern);
 			return randPick();
 
 		} else {

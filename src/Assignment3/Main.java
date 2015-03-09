@@ -70,9 +70,24 @@ public class Main {
 				pattern = pattern.substring(1) + m[choice - 1];
 			else
 				pattern += m[choice - 1];
+			System.out.println("You choose: " + m[choice - 1]);
 			System.out.println("Computer choose: " + predict);
+			
+			switch (computer.compare(m[choice - 1], predict)){
+			case 1:
+				System.out.println("You Win!");
+				break;
+			case 0:
+				System.out.println("You Tie!");
+				break;
+			case -1:
+				System.out.println("You Lose!");
+				break;
+			}
 			computer.add(new Pattern(pattern));
 		}
+		
+		//Write object Computer to file.
 		try {
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
 			out.writeObject(computer);
