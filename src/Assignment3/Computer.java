@@ -101,7 +101,7 @@ public class Computer implements Serializable {
 				else if (cPredict == 'p')
 					return 's';
 				else if (cPredict == 's')
-					return 'p';
+					return 'r';
 			}
 
 		}
