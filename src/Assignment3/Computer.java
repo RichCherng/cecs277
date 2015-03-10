@@ -12,16 +12,12 @@ public class Computer implements Serializable {
 		hash = new HashMap<Pattern, Integer>();
 	}
 
-	public void add(String pattern) {
+	public void storePattern(String pattern) {
 		Pattern p = new Pattern(pattern);
 		if (hash.containsKey(p))
 			hash.put(p, hash.get(p) + 1);
 		else
 			hash.put(p, 1);
-
-		/*
-		 * for(Pattern i: hash.keySet()){ System.out.println(i.getPattern()); }
-		 */
 	}
 
 	public int compare(char player, char computer) {
@@ -54,7 +50,7 @@ public class Computer implements Serializable {
 		return 0;
 	}
 
-	public char prediction(String pattern) {
+	public char makePrediction(String pattern) {
 		if (pattern.length() != 4) {
 			return randPick();
 

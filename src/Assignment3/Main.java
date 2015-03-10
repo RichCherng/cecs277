@@ -16,7 +16,7 @@ public class Main {
 		File file = new File("computer.dat");
 		Computer computer = new Computer();
 		String pattern = "";
-		int choice  = 1;
+		int choice  = 1, p_player = 0,p_computer = 0;
 		char[] m = {'r','p','s'};
 		boolean running = true;
 		
@@ -43,29 +43,14 @@ public class Main {
 			}
 		} 
 		
-		/*while(pattern.length() < 4 && running){
-			//play first 5 round first
-			System.out.print("Choose your Move:\n1.Rock\n2.Paper\n3.Scissor\n4.Quit\n");
-			choice = checkInt(1,4);
-			if(choice == 4){
-				running = false;
-				break;
-			}
-			pattern += m[choice - 1];
-			System.out.println("Computer choose: " + computer.randPick());
-		}
-		*/
-		
-		
-		//System.out.println(pattern);
-		computer.add(pattern);
+		computer.storePattern(pattern);
 		while(running){
 			System.out.print("Choose your Move:\n1.Rock\n2.Paper\n3.Scissor\n4.Quit\n");
 			choice = checkInt(1,4);
 			if(choice == 4){
 				break;
 			}
-			char predict = computer.prediction(pattern);
+			char predict = computer.makePrediction(pattern);
 			if(pattern.length() == 4)
 				pattern = pattern.substring(1) + m[choice - 1];
 			else
@@ -75,16 +60,19 @@ public class Main {
 			
 			switch (computer.compare(m[choice - 1], predict)){
 			case 1:
-				System.out.println("You Win!");
+				System.out.println("\nYou Win!\n");
+				p_player++;
 				break;
 			case 0:
-				System.out.println("You Tie!");
+				System.out.println("\nYou Tie!\n");
 				break;
 			case -1:
-				System.out.println("You Lose!");
+				System.out.println("\nYou Lose!\n");
+				p_computer++;
 				break;
 			}
-			computer.add(pattern);
+			System.out.printf("Player Points: %d%nComputer Points: %d%n%n",p_player,p_computer);
+			computer.storePattern(pattern);
 		}
 		
 		//Write object Computer to file.
