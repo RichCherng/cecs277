@@ -1,5 +1,7 @@
 package Assignment3;
-
+/**
+ * Main Class - Game Rock, Paper, Scissor
+ */
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,14 +14,20 @@ import java.util.Scanner;
 public class Main {
 	
 	public static void main(String[] args){
+		//Scanner to read in file
 		Scanner scanner = new Scanner(System.in);
+		//Initialize File
 		File file = new File("computer.dat");
+		//Initialize Computer
 		Computer computer = new Computer();
+		//Initialize String that will hold your move
 		String pattern = "";
+		//Initialize Counter for player/computer points and choice for user input
 		int choice  = 1, p_player = 0,p_computer = 0;
+		//Initialize array of all possible move
 		char[] m = {'r','p','s'};
+		//Initialize Game State
 		boolean running = true;
-		
 		//Game choices for Veteran or Beginner
 		System.out.println("Choose game mode\n1.Beginner\n2.Veteran\n");
 		choice = checkInt(1,2);
@@ -42,22 +50,25 @@ public class Main {
 				}
 			}
 		} 
-		
-		computer.storePattern(pattern);
+		//Run the game until user quit
 		while(running){
 			System.out.print("Choose your Move:\n1.Rock\n2.Paper\n3.Scissor\n4.Quit\n");
+			//Ask and check user's input
 			choice = checkInt(1,4);
+			//User choose quit, stop the game
 			if(choice == 4){
 				break;
 			}
+			//prediction from computer
 			char predict = computer.makePrediction(pattern);
+			//replace the 4th previous input and insert new input
 			if(pattern.length() == 4)
 				pattern = pattern.substring(1) + m[choice - 1];
 			else
 				pattern += m[choice - 1];
 			System.out.println("You choose: " + m[choice - 1]);
 			System.out.println("Computer choose: " + predict);
-			
+			//Check for result of the game
 			switch (computer.compare(m[choice - 1], predict)){
 			case 1:
 				System.out.println("\nYou Win!\n");
@@ -83,10 +94,22 @@ public class Main {
 		} catch(FileNotFoundException e){
 			e.printStackTrace();
 		} catch (IOException e){
-			
+			e.printStackTrace();
 		}
+		//Print out the winner
+		if(p_player > p_computer){
+			System.out.println("You Won!");
+		}else if (p_computer > p_player)
+			System.out.println("You Lost!");
+		else
+			System.out.println("Tie!!");
 	}
-	
+	/**
+	 * Ask user for input and check if user is valid.
+	 * @param low lowest possible input
+	 * @param high highest possible input
+	 * @return the valid input
+	 */
 	public static int checkInt(int low, int high){
 		Scanner in = new Scanner(System.in);
 		boolean valid = false;
