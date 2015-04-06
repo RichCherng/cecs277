@@ -1,6 +1,6 @@
 package Assignment4;
 
-public class Song {
+public class Song implements Comparable<Song>{
 	private String mTitle,mArtist,mAlbum;
 	int mRating;
 	
@@ -26,4 +26,14 @@ public class Song {
 	public int getRating(){
 		return mRating;
 	}
+
+	@Override
+	public int compareTo(Song s) {
+		if(s.mRating == mRating){
+			return mTitle.compareTo(s.mTitle);
+		}
+		return mRating > s.mRating? 1:-1;
+	}
+	
+	
 }
