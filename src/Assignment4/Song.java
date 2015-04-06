@@ -29,10 +29,16 @@ public class Song implements Comparable<Song>{
 
 	@Override
 	public int compareTo(Song s) {
+		//higher value return negative cuz they go first
 		if(s.mRating == mRating){
-			return mTitle.compareTo(s.mTitle);
+			return s.mTitle.compareTo(mTitle);
 		}
-		return mRating > s.mRating? 1:-1;
+		return mRating < s.mRating? 1:-1;
+	}
+	
+	@Override
+	public String toString(){
+		return mTitle + " " + mArtist + " " + mAlbum + " " + mRating ;
 	}
 	
 	
