@@ -30,90 +30,76 @@ public class Heap<T extends Comparable<T>> {
 		return 2 * i + 1;
 	}
 
-	@SuppressWarnings({ "hiding", "unchecked" })
-	public <T> T get(int i) {
+	public T get(int i) {
 		if (i < 0 || i > heap.size()) {
 			throw new IndexOutOfBoundsException("Index is out of bounds!");
 		}
-		return (T) heap.get(i);
-	}
-
-	private void fixHeap() {
-		T root = heap.get(1);
-
-		int lastIndex = heap.size() - 1;
-		// Promote children of removed root while they are smaller than last
-
-		int index = 1;
-		boolean more = true;
-		while (more) {
-			int childIndex = getLeftChild(index);
-			if (childIndex <= lastIndex) {
-				// Get smaller child
-
-				// Get left child first
-				T child = heap.get(getLeftChild(index));
-
-				// Use right child instead if it is smaller
-				if (getRightChild(index) <= lastIndex
-						&& heap.get(getRightChild(index)).compareTo(child) < 0) {
-					childIndex = getRightChild(index);
-					child = heap.get(getRightChild(index));
-				}
-
-				// Check if larger child is smaller than root
-				if (child.compareTo(root) < 0) {
-					// Promore child
-					heap.set(index, child);
-					index = childIndex;
-				} else {
-					// Root is smaller than both children
-					more = false;
-				}
-			} else {
-				// No children
-				more = false;
-			}
-		}
-
-		// Store root element in vacant slot
-		heap.set(index, root);
+		return heap.get(i);
 	}
 
 	public T remove() {
-		T minimum = heap.get(1);
-		// remove last element
-		int lastIndex = heap.size() - 1;
-		T last = heap.remove(lastIndex);
-
-		if (lastIndex > 1) {
-			heap.set(1, last);
-			fixHeap();
-		}
-
-		return minimum;
-	}
-
-	public void add(T newElement) {
-		// Add new Leaf
-		heap.add(newElement);
+		T min = heap.get(0);
 		int index = heap.size() - 1;
-
-		// Demote parents that are larger than the new element
-		while (index > 1
-				&& heap.get(getParent(index)).compareTo(newElement) > 0) {
+		T last = heap.remove(index);
+		if (index > 0) {
+			heap.set(0, last);
+			T root = heap.get(0);
+			int end = heap.size() - 1;
+			index = 0;
+			boolean done = false;
+			while (!done) {
+				if (getLeftChild(index) <= end) {// left exists
+					T child = heap.get(getLeftChild(index));
+					int childLoc = getLeftChild(index);
+					if (getRightChild(index) <= end) {// rt exists
+						if (heap.get(getRightChild(index)).compareTo(child) == -1){
+							child = heap.get(getRightChild(index));
+							childLoc = getRightChild(index);
+						}
+					}
+					if (child.compareTo(root) == -1) {
+						heap.set(index, child);
+						index = childLoc;
+					} else {
+						done = true;
+					}
+				} else {// no children
+					done = true;
+				}
+			}
+			heap.set(index, root);
+		}
+		return min;
+	}
+	
+	public void sort(){
+		ArrayList<T> t = new ArrayList<T>();
+		while(!heap.isEmpty()){
+			t.add(remove());
+		}
+		heap = t;
+	}
+	
+	public void add(T n) {
+		heap.add(null);
+		int index = heap.size() - 1;
+		while (index > 0 && heap.get(getParent(index)).compareTo(n) == 1) {
 			heap.set(index, heap.get(getParent(index)));
 			index = getParent(index);
-
-			// Store the new element in the vacant slot
-			heap.set(index, newElement);
 		}
+		heap.set(index, n);
 	}
 
 	public void printHeap() {
 		for (int i = 0; i < heap.size(); i++) {
 			System.out.println(heap.get(i).toString());
 		}
+		System.out.println();
+	}
+
+	public T peek() {
+		// the root
+		return heap.get(0);
 	}
 
 }

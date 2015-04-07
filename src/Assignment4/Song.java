@@ -1,5 +1,7 @@
 package Assignment4;
 
+import java.util.Formatter;
+
 public class Song implements Comparable<Song>{
 	private String mTitle,mArtist,mAlbum;
 	int mRating;
@@ -38,7 +40,13 @@ public class Song implements Comparable<Song>{
 	
 	@Override
 	public String toString(){
-		return mTitle + " " + mArtist + " " + mAlbum + " " + mRating ;
+		String template = "%-50s %-25s %-30s %5d ";
+		StringBuilder stringBuilder = new StringBuilder();
+		Formatter formatter = new Formatter(stringBuilder);
+		formatter.format(template, mTitle, mArtist,mAlbum,mRating);
+		formatter.close();
+		return stringBuilder.toString();
+		//return mTitle + ", " + mArtist + ", " + mAlbum + ", " + mRating ;
 	}
 	
 	
