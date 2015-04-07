@@ -33,7 +33,8 @@ public class Song implements Comparable<Song>{
 	public int compareTo(Song s) {
 		//higher value return negative cuz they go first
 		if(s.mRating == mRating){
-			return s.mTitle.compareTo(mTitle);
+			//return mTitle.compareTo(s.mTitle);
+			return mTitle.compareToIgnoreCase(s.mTitle);
 		}
 		return mRating < s.mRating? 1:-1;
 	}
