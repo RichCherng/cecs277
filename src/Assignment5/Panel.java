@@ -12,12 +12,15 @@ import javax.swing.JPanel;
 public class Panel extends JPanel {
 
 	int Dim_X,Dim_Y;
+	/*dimension of JFrame*/
+	int fx,fy;
 	char[][] map;
 	
-	public Panel() {
-		
+	public Panel(int jx,int jy) {
+		fx = jx;
+		fy = jy;
 		Scanner read = null;
-
+		
 		try {
 			read = new Scanner(new File("map1.txt"));
 		} catch (FileNotFoundException e) {
@@ -63,7 +66,7 @@ public class Panel extends JPanel {
 		for(int row = 0; row < Dim_X; row++){
 			for(int col = 0; col < Dim_Y; col++){
 				if(map[row][col] == 1)
-					g.fillRect(row *(getXDim()*80/Dim_X), col*(getYDim()*80/Dim_Y), 80, 80);
+					g.fillRect(row *(getXDim()*fx/Dim_X), col*(getYDim()*fy/Dim_Y), fx, fy);
 			}
 		}
 	}
