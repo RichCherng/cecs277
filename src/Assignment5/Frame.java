@@ -9,7 +9,7 @@ public class Frame extends JFrame {
 	public Frame  (){
 		this.setTitle("Tank");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		int fX = 70;
+		int fX = 80;
 		int fY = 80;
 		Panel p = new Panel(fX,fY);
 		//p.setResizable(false);

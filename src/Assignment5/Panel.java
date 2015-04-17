@@ -68,10 +68,16 @@ public class Panel extends JPanel implements KeyListener,Runnable {
 		for (int row = 0; row < Dim_X; row++) {
 			for (int col = 0; col < Dim_Y; col++) {
 				if (map[row][col] == 1)
-					g.fillRect(row * (Dim_X * fx / Dim_X), col
-							* (Dim_Y * fy / Dim_Y), fx, fy);
+					g.fillRect(col * (Dim_X * fx / Dim_X),
+								row * (Dim_Y * fy / Dim_Y), fx, fy);
+				
+				
+				System.out.print(map[row][col] + 0);
 			}
+			System.out.println();
+			
 		}
+		System.out.println();
 		player.draw(g);
 	}
 
@@ -86,7 +92,7 @@ public class Panel extends JPanel implements KeyListener,Runnable {
 			
 		} while (map[randomX][randomY] == 1);
 		
-		return new Point(randomX * (Dim_X * fx / Dim_X),randomY * (Dim_Y * fy / Dim_Y));
+		return new Point(randomX * (Dim_X * fy / Dim_X),randomY * (Dim_Y * fx / Dim_Y));
 	}
 
 	@Override

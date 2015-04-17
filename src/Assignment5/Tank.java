@@ -33,16 +33,19 @@ public class Tank extends JPanel{
 		switch(dir){
 		case KeyEvent.VK_W:
 			//p.setLocation(p.getX(), p.getY()-13);
-			p.translate(0, - dimY/2);
+			p.translate(0, - dimY/16);
 			break;
 		case KeyEvent.VK_S:
-			p.setLocation(p.getX(), p.getY()+13);
+			//p.setLocation(p.getX(), p.getY()+13);
+			p.translate(0, dimY/8);
 			break;
 		case KeyEvent.VK_A:
-			p.setLocation(p.getX()-13, p.getY());
+			//p.setLocation(p.getX()-13, p.getY());
+			p.translate(-dimX/8, 0);
 			break;
 		case KeyEvent.VK_D:
-			p.setLocation(p.getX()+13, p.getY());
+			//p.setLocation(p.getX()+13, p.getY());
+			p.translate(dimX/8, 0);
 			break;
 		}
 	}
