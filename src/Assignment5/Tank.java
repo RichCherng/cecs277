@@ -26,7 +26,7 @@ public class Tank extends JPanel{
 		//g.drawRect( 0, 0, 50, 50);
 		g.setColor(c);
 		//g.fillRect(0, 0, 50, 50);
-		g.fillRect( (int)p.getX(), (int)p.getY(), 100, 100);
+		g.fillRect( (int)p.getX(), (int)p.getY(), 25, 25);
 	}
 	
 	public void moveTank(int dir){
