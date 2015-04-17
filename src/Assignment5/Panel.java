@@ -12,13 +12,14 @@ import java.util.Scanner;
 
 import javax.swing.JPanel;
 
-public class Panel extends JPanel implements KeyListener {
+public class Panel extends JPanel implements KeyListener,Runnable {
 
 	int Dim_X, Dim_Y;
 	/* dimension of JFrame */
 	int fx, fy;
 	char[][] map;
 	Tank player;
+	private Thread t;
 
 	public Panel(int jx, int jy) {
 		super();
@@ -46,13 +47,14 @@ public class Panel extends JPanel implements KeyListener {
 				map[x][y] = (char) Integer.parseInt(dim[y]);
 			}
 		}
-
+		t = new Thread(this);
 		player = new Tank(RandomSpawn(), Color.GREEN, 1);
 		// setLayout(new GridBagLayout());
 		// setLayout(new BorderLayout());
 		this.addKeyListener(this);
 		setFocusable(true);
 		setBounds(0, 0, Dim_X * 80, Dim_Y * 80);
+		t.start();
 		// setSize(getXDim()*80,getYDim()*80);
 		// setBackground(Color.DARK_GRAY);
 	}
@@ -91,8 +93,8 @@ public class Panel extends JPanel implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		// System.out.println("move");
-		player.moveTank(key);
-		repaint();
+		player.moveTank(key,fx,fy);
+		//repaint();
 		System.out.println(player.p);
 		// this.repaint();
 
@@ -108,6 +110,19 @@ public class Panel extends JPanel implements KeyListener {
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void run() {
+		while(true){
+			repaint();
+			try{
+				Thread.sleep(16);//~60 fps
+			} catch (InterruptedException e){
+				
+			}
+		}
+		
 	}
 
 	/*

@@ -29,10 +29,11 @@ public class Tank extends JPanel{
 		g.fillRect( (int)p.getX(), (int)p.getY(), 25, 25);
 	}
 	
-	public void moveTank(int dir){
+	public void moveTank(int dir,int dimX, int dimY){
 		switch(dir){
 		case KeyEvent.VK_W:
-			p.setLocation(p.getX(), p.getY()-13);
+			//p.setLocation(p.getX(), p.getY()-13);
+			p.translate(0, - dimY/2);
 			break;
 		case KeyEvent.VK_S:
 			p.setLocation(p.getX(), p.getY()+13);
