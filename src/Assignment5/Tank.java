@@ -14,9 +14,13 @@ public class Tank extends JPanel{
 	int direction,speed;
 	Missile missile;
 	Point barrel;
+	private final int BarrelRange = 50;
+	private final int DIM_X = 50;
+	private final int DIM_Y = 50;
 	
 	public Tank(Point loc, Color col, int dir){
 		p = loc;
+		barrel = loc;
 		c = col;
 		direction = dir;
 	}
@@ -26,7 +30,25 @@ public class Tank extends JPanel{
 		//g.drawRect( 0, 0, 50, 50);
 		g.setColor(c);
 		//g.fillRect(0, 0, 50, 50);
-		g.fillRect( (int)p.getX(), (int)p.getY(), 25, 25);
+		g.fillRect( (int)p.getX(), (int)p.getY(), DIM_X, DIM_Y);
+		g.setColor(Color.RED);
+		drawBarrel(g);
+	}
+	
+	public void drawBarrel(Graphics g){
+		double unitX =  (barrel.getX() - (p.getX() + DIM_X/2));
+		double unitY =  (barrel.getY() - (p.getY() + DIM_Y/2));
+		double mag = Math.sqrt(Math.pow(unitX, 2) + Math.pow(unitY,2));
+		unitX /= mag;
+		unitY /= mag;
+		int newX = (int) (BarrelRange * unitX);
+		int newY = (int) (BarrelRange * unitY);
+		g.drawLine((int)p.getX() + DIM_X/2, (int)p.getY() + DIM_Y/2, (int)p.getX() + DIM_X/2 + newX, (int)p.getY() + DIM_Y/2 + newY);
+		System.out.println(unitX + " " + unitY + " " + mag);
+	}
+	
+	public void updateBarrel(int x, int y){
+		barrel = new Point(x,y);
 	}
 	
 	public void moveTank(int dir,int dimX, int dimY){

@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Random;
@@ -12,7 +14,7 @@ import java.util.Scanner;
 
 import javax.swing.JPanel;
 
-public class Panel extends JPanel implements KeyListener,Runnable {
+public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionListener {
 
 	int Dim_X, Dim_Y;
 	/* dimension of JFrame */
@@ -52,10 +54,11 @@ public class Panel extends JPanel implements KeyListener,Runnable {
 		// setLayout(new GridBagLayout());
 		// setLayout(new BorderLayout());
 		this.addKeyListener(this);
+		this.addMouseMotionListener(this);
 		setFocusable(true);
 		setBounds(0, 0, Dim_X * 80, Dim_Y * 80);
 		t.start();
-		// setSize(getXDim()*80,getYDim()*80);
+		// setSize(getXDim()*80,getYDim()*80); 
 		// setBackground(Color.DARK_GRAY);
 	}
 
@@ -68,19 +71,32 @@ public class Panel extends JPanel implements KeyListener,Runnable {
 		for (int row = 0; row < Dim_X; row++) {
 			for (int col = 0; col < Dim_Y; col++) {
 				if (map[row][col] == 1)
-					g.fillRect(col * (Dim_X * fx / Dim_X),
-								row * (Dim_Y * fy / Dim_Y), fx, fy);
+					g.fillRect(col * fx ,
+							row * (Dim_Y * fy / Dim_Y), fx, fy);
 				
 				
-				System.out.print(map[row][col] + 0);
+				//System.out.print(map[row][col] + 0);
 			}
-			System.out.println();
+			//System.out.println();
 			
 		}
-		System.out.println();
+		//System.out.println();
 		player.draw(g);
 	}
 
+	public void CreateMap(char[][] map){
+		System.out.println("Creating a map....");
+		char[][] temp = new char[map.length * 3][map[0].length * 3];
+		for(int row = 0; row < map.length; row++){
+			for( int col = 0; col < map[0].length; col++){
+				for(int mRow = 0; mRow < 3; mRow++){
+					for(int mCol = 0; mCol < 3; mCol++){
+						temp[row + mRow][mCol * col] = map[row][col];
+					}
+				}
+			}
+		}
+	}
 	public Point RandomSpawn() {
 
 		Random rand = new Random();
@@ -128,6 +144,21 @@ public class Panel extends JPanel implements KeyListener,Runnable {
 				
 			}
 		}
+		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		int x = e.getX();
+		int y = e.getY();
+		player.updateBarrel(x, y);
 		
 	}
 
