@@ -17,8 +17,10 @@ public class Tank extends JPanel{
 	Missile missile;
 	Point barrel;
 	private final int BarrelRange = 50;
-	private final int DIM_X = 50;
-	private final int DIM_Y = 50;
+	final int DIM_X = 50;
+	final int DIM_Y = 50;
+	double unitX;
+	double unitY;
 	
 	public Tank(Point loc, Color col, int dir){
 		p = loc;
@@ -39,8 +41,8 @@ public class Tank extends JPanel{
 	}
 	
 	public void drawBarrel(Graphics g){
-		double unitX =  (barrel.getX() - (p.getX() + DIM_X/2));
-		double unitY =  (barrel.getY() - (p.getY() + DIM_Y/2));
+		unitX =  (barrel.getX() - (p.getX() + DIM_X/2));
+		unitY =  (barrel.getY() - (p.getY() + DIM_Y/2));
 		double mag = Math.sqrt(Math.pow(unitX, 2) + Math.pow(unitY,2));
 		unitX /= mag;
 		unitY /= mag;
@@ -84,7 +86,6 @@ public class Tank extends JPanel{
 		for(Rectangle r: obs){
 			if(new Rectangle(x,y,DIM_X,DIM_Y).intersects(r)){
 				intersect = true;
-				System.out.println();
 			}
 		}
 		if(!intersect)

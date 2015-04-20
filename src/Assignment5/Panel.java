@@ -7,16 +7,19 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.JPanel;
 
-public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionListener {
+public class Panel extends JPanel implements KeyListener, Runnable,
+		MouseMotionListener, MouseListener {
 
 	int Dim_X, Dim_Y;
 	/* dimension of JFrame */
@@ -25,6 +28,7 @@ public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionLi
 	Tank player;
 	private Thread t;
 	ArrayList<Rectangle> obs = new ArrayList<Rectangle>();
+	ArrayList<Missile> mis = new ArrayList<Missile>();
 
 	public Panel(int jx, int jy) {
 		super();
@@ -51,8 +55,8 @@ public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionLi
 			for (int y = 0; y < Dim_Y; y++) {
 				map[x][y] = (char) Integer.parseInt(dim[y]);
 				if (map[x][y] == 1)
-					obs.add(new Rectangle(y * fx ,
-							x * (Dim_Y * fy / Dim_Y), fx, fy));
+					obs.add(new Rectangle(y * fx, x * (Dim_Y * fy / Dim_Y), fx,
+							fy));
 			}
 		}
 		t = new Thread(this);
@@ -61,10 +65,11 @@ public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionLi
 		// setLayout(new BorderLayout());
 		this.addKeyListener(this);
 		this.addMouseMotionListener(this);
+		this.addMouseListener(this);
 		setFocusable(true);
 		setBounds(0, 0, Dim_X * 80, Dim_Y * 80);
 		t.start();
-		// setSize(getXDim()*80,getYDim()*80); 
+		// setSize(getXDim()*80,getYDim()*80);
 		// setBackground(Color.DARK_GRAY);
 	}
 
@@ -77,26 +82,44 @@ public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionLi
 		for (int row = 0; row < Dim_X; row++) {
 			for (int col = 0; col < Dim_Y; col++) {
 				if (map[row][col] == 1)
-					g.fillRect(col * fx ,
-							row * (Dim_Y * fy / Dim_Y), fx, fy);
-				
-				
-				//System.out.print(map[row][col] + 0);
+					g.fillRect(col * fx, row * (Dim_Y * fy / Dim_Y), fx, fy);
+
+				// System.out.print(map[row][col] + 0);
 			}
-			//System.out.println();
-			
+			// System.out.println();
+
 		}
-		//System.out.println();
+		// System.out.println();
 		player.draw(g);
+		if (mis.size() > 0) {
+			for (Missile missile : mis) {
+				missile.updateMove();
+				boolean intersect = false;
+				for(Rectangle r: obs){
+					if(r.contains(missile.p)){
+						intersect = true;
+						missile.remove();
+					}
+				}
+			
+					missile.draw(g);
+			}
+		}
+		for(Iterator<Missile> iterator = mis.iterator(); iterator.hasNext();){
+			Missile miss = iterator.next();
+			if(miss.remove){
+				iterator.remove();
+			}
+		}
 	}
 
-	public void CreateMap(char[][] map){
+	public void CreateMap(char[][] map) {
 		System.out.println("Creating a map....");
 		char[][] temp = new char[map.length * 3][map[0].length * 3];
-		for(int row = 0; row < map.length; row++){
-			for( int col = 0; col < map[0].length; col++){
-				for(int mRow = 0; mRow < 3; mRow++){
-					for(int mCol = 0; mCol < 3; mCol++){
+		for (int row = 0; row < map.length; row++) {
+			for (int col = 0; col < map[0].length; col++) {
+				for (int mRow = 0; mRow < 3; mRow++) {
+					for (int mCol = 0; mCol < 3; mCol++) {
 						temp[row + mRow][mCol * col] = map[row][col];
 					}
 				}
@@ -104,27 +127,42 @@ public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionLi
 		}
 		System.out.println(obs.size());
 	}
+
 	public Point RandomSpawn() {
 
 		Random rand = new Random();
-		int randomX;
-		int randomY;
-		do {
+		int randomX = 0;
+		int randomY = 0;
+		/*
+		 * do { randomX = rand.nextInt(Dim_X); randomY = rand.nextInt(Dim_Y);
+		 * 
+		 * } while (map[randomX][randomY] == 1);
+		 */
+
+		boolean intersect = true;
+		while (intersect) {
 			randomX = rand.nextInt(Dim_X);
 			randomY = rand.nextInt(Dim_Y);
+			intersect = false;
+			for (Rectangle r : obs) {
+				if (new Rectangle(randomY * fx, randomX * fy, 50, 50).intersects(r)) {
+					intersect = true;
+					break;
+				}
+			}
 			
-		} while (map[randomX][randomY] == 1);
-		
-		return new Point(randomX * (Dim_X * fy / Dim_X),randomY * (Dim_Y * fx / Dim_Y));
+		}
+
+		return new Point(randomX * fx, randomY * fy);
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		// System.out.println("move");
-		player.moveTank(key,fx,fy,obs);
-		//repaint();
-		//System.out.println(player.p);
+		player.moveTank(key, fx, fy, obs);
+		// repaint();
+		// System.out.println(player.p);
 		// this.repaint();
 
 	}
@@ -143,21 +181,21 @@ public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionLi
 
 	@Override
 	public void run() {
-		while(true){
+		while (true) {
 			repaint();
-			try{
-				Thread.sleep(16);//~60 fps
-			} catch (InterruptedException e){
-				
+			try {
+				Thread.sleep(16);// ~60 fps
+			} catch (InterruptedException e) {
+
 			}
 		}
-		
+
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -166,7 +204,40 @@ public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionLi
 		int x = e.getX();
 		int y = e.getY();
 		player.updateBarrel(x, y);
-		
+
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// Missile shot = new Missile(player.p,player.unitX,player.unitY);
+		int x = (int) (player.p.getX() + (player.DIM_Y / 2));
+		int y = (int) (player.p.getY() + (player.DIM_Y / 2));
+		mis.add(new Missile(x, y, player.unitX, player.unitY));
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+
 	}
 
 	/*
