@@ -3,7 +3,9 @@ package Assignment5;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -23,6 +25,7 @@ public class Tank extends JPanel{
 		barrel = loc;
 		c = col;
 		direction = dir;
+		
 	}
 	
 	public void draw(Graphics g){
@@ -43,32 +46,48 @@ public class Tank extends JPanel{
 		unitY /= mag;
 		int newX = (int) (BarrelRange * unitX);
 		int newY = (int) (BarrelRange * unitY);
-		g.drawLine((int)p.getX() + DIM_X/2, (int)p.getY() + DIM_Y/2, (int)p.getX() + DIM_X/2 + newX, (int)p.getY() + DIM_Y/2 + newY);
-		System.out.println(unitX + " " + unitY + " " + mag);
+		g.drawLine((int)p.getX() + DIM_X/2, (int)p.getY() + DIM_Y/2,
+					(int)p.getX() + DIM_X/2 + newX, (int)p.getY() + DIM_Y/2 + newY);
+		//System.out.println(unitX + " " + unitY + " " + mag);
 	}
 	
 	public void updateBarrel(int x, int y){
 		barrel = new Point(x,y);
 	}
 	
-	public void moveTank(int dir,int dimX, int dimY){
+	public void moveTank(int dir,int dimX, int dimY,ArrayList<Rectangle> obs){
+		int x = (int) p.getX();
+		int y = (int) p.getY();
 		switch(dir){
 		case KeyEvent.VK_W:
 			//p.setLocation(p.getX(), p.getY()-13);
-			p.translate(0, - dimY/16);
+			//p.translate(0, - dimY/16);
+			y -= dimY/8;
 			break;
 		case KeyEvent.VK_S:
 			//p.setLocation(p.getX(), p.getY()+13);
-			p.translate(0, dimY/8);
+			//p.translate(0, dimY/8);
+			 y += dimY/8;
 			break;
 		case KeyEvent.VK_A:
 			//p.setLocation(p.getX()-13, p.getY());
-			p.translate(-dimX/8, 0);
+			//p.translate(-dimX/8, 0);
+			x -= dimX/8;
 			break;
 		case KeyEvent.VK_D:
 			//p.setLocation(p.getX()+13, p.getY());
-			p.translate(dimX/8, 0);
+			//p.translate(dimX/8, 0);
+			x += dimX/8;
 			break;
 		}
+		boolean intersect = false;
+		for(Rectangle r: obs){
+			if(new Rectangle(x,y,DIM_X,DIM_Y).intersects(r)){
+				intersect = true;
+				System.out.println();
+			}
+		}
+		if(!intersect)
+			p.setLocation(x,y);
 	}
 }

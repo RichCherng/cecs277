@@ -3,12 +3,14 @@ package Assignment5;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -22,6 +24,7 @@ public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionLi
 	char[][] map;
 	Tank player;
 	private Thread t;
+	ArrayList<Rectangle> obs = new ArrayList<Rectangle>();
 
 	public Panel(int jx, int jy) {
 		super();
@@ -47,6 +50,9 @@ public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionLi
 			dim = input.split("\\s+");
 			for (int y = 0; y < Dim_Y; y++) {
 				map[x][y] = (char) Integer.parseInt(dim[y]);
+				if (map[x][y] == 1)
+					obs.add(new Rectangle(y * fx ,
+							x * (Dim_Y * fy / Dim_Y), fx, fy));
 			}
 		}
 		t = new Thread(this);
@@ -96,6 +102,7 @@ public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionLi
 				}
 			}
 		}
+		System.out.println(obs.size());
 	}
 	public Point RandomSpawn() {
 
@@ -115,9 +122,9 @@ public class Panel extends JPanel implements KeyListener,Runnable, MouseMotionLi
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		// System.out.println("move");
-		player.moveTank(key,fx,fy);
+		player.moveTank(key,fx,fy,obs);
 		//repaint();
-		System.out.println(player.p);
+		//System.out.println(player.p);
 		// this.repaint();
 
 	}
