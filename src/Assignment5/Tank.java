@@ -23,19 +23,18 @@ public class Tank extends JPanel{
 	double unitX;
 	double unitY;
 	boolean remove = false;
+	Rectangle mRec;
 	
 	public Tank(Point loc, Color col){
 		p = loc;
 		barrel = loc;
 		c = col;
+		mRec = new Rectangle((int)loc.getX(),(int)loc.getY(),DIM_X,DIM_Y);
 		
 	}
 	
 	public void draw(Graphics g){
-		
-		//g.drawRect( 0, 0, 50, 50);
 		g.setColor(c);
-		//g.fillRect(0, 0, 50, 50);
 		g.fillRect( (int)p.getX(), (int)p.getY(), DIM_X, DIM_Y);
 		g.setColor(Color.RED);
 		drawBarrel(g);
@@ -53,7 +52,6 @@ public class Tank extends JPanel{
 		barrelY = (int)p.getY() + DIM_Y/2 + newY;
 		g.drawLine((int)p.getX() + DIM_X/2, (int)p.getY() + DIM_Y/2,
 					(int)p.getX() + DIM_X/2 + newX, (int)p.getY() + DIM_Y/2 + newY);
-		//System.out.println(unitX + " " + unitY + " " + mag);
 	}
 	
 	public void updateBarrel(int x, int y){
@@ -67,52 +65,69 @@ public class Tank extends JPanel{
 		case KeyEvent.VK_W:
 			//p.setLocation(p.getX(), p.getY()-13);
 			//p.translate(0, - dimY/16);
-			dy -= dimY/8;
+			dy -= 3;
 			break;
 		case KeyEvent.VK_S:
 			//p.setLocation(p.getX(), p.getY()+13);
 			//p.translate(0, dimY/8);
-			 dy += dimY/8;
+			 dy += 3;
 			break;
 		case KeyEvent.VK_A:
 			//p.setLocation(p.getX()-13, p.getY());
 			//p.translate(-dimX/8, 0);
-			dx -= dimX/8;
+			dx -= 3;
 			break;
 		case KeyEvent.VK_D:
 			//p.setLocation(p.getX()+13, p.getY());
 			//p.translate(dimX/8, 0);
-			dx += dimX/8;
+			dx += 3;
 			break;
 		}
 		boolean intersect = false;
+		p.translate(dx,dy);
+		mRec.setLocation(p);
 		for(Rectangle r: obs){
-			if(new Rectangle( (int)(p.getX()+dx) ,(int)(p.getY() + dy),DIM_X,DIM_Y).intersects(r)){
+			if(mRec.intersects(r)){
 				intersect = true;
 			}
 		}
-		if(!intersect)
-			p.translate(dx,dy);
+		if(intersect){
+			p.translate(-dx,-dy);
+			mRec.setLocation(p);
+		}
+	}
+	
+	public Rectangle getRec(){
+		return mRec;
 	}
 	
 	public void updateMove(int fx,int fy,ArrayList<Rectangle> obs){
 		
 		boolean intersect = false;
+		p.translate((int)(unitX*fx/8), 0);
+		System.out.print(unitX*fx/8);
+		mRec.setLocation(p);
 		for(Rectangle r: obs){
-			if(new Rectangle( (int)(p.getX()+(unitX*fx/8)) ,(int)(p.getY()),DIM_X,DIM_Y).intersects(r)){
+			if(mRec.intersects(r)){
 				intersect = true;
 			}
 		}
-		if(!intersect)
-			p.translate((int)(unitX*fx/8), 0);
+		if(intersect){
+			p.translate(-(int)(unitX*fx/8), 0);
+			mRec.setLocation(p);
+		}
 		
+		p.translate(0,(int)(unitY*fy));
+		mRec.setLocation(p);
 		for(Rectangle r: obs){
-			if(new Rectangle( (int)(p.getX()) ,(int)(p.getY() + unitY*fy),DIM_X,DIM_Y).intersects(r)){
+			if(mRec.intersects(r)){
 				intersect = true;
 			}
 		}
-		if(!intersect)
-			p.translate(0, (int)(unitY*fy));
+		if(intersect){
+			p.translate(0,-(int)(unitY*fy));
+			mRec.setLocation(p);
+		}
 		
 	}
 	

@@ -23,7 +23,7 @@ public class Missile extends JPanel{
 	}
 	
 	public void updateMove(){
-		p.translate((int)(unitX * 10), (int)(unitY * 10));
+		p.translate((int)(unitX * 5), (int)(unitY * 5));
 	}
 	
 	public void remove(){

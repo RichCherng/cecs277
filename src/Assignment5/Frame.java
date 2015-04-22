@@ -2,16 +2,17 @@ package Assignment5;
 
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 
 public class Frame extends JFrame {
 	
-	public Frame  (){
+	public Frame  (int diff){
 		this.setTitle("Tank");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		int fX = 80;
 		int fY = 80;
-		Panel p = new Panel(fX,fY);
+		Panel p = new Panel(fX,fY,diff);
 		//p.setResizable(false);
 		//frame.setLayout(new GridBagLayout());
 		p.addKeyListener(p);
@@ -31,8 +32,10 @@ public class Frame extends JFrame {
 	}
 	
 	public static void main(String[] args){
-		
-		new Frame();
+		JFrame diff = new JFrame();
+		String difficulty = "0";
+		difficulty = JOptionPane.showInputDialog(diff, "Pick Difficulty?");
+		new Frame(Integer.parseInt(difficulty));
 		
 	}
 }
