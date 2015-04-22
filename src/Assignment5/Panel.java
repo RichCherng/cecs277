@@ -29,6 +29,7 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 	private Thread t;
 	ArrayList<Rectangle> obs = new ArrayList<Rectangle>();
 	ArrayList<Missile> mis = new ArrayList<Missile>();
+	ArrayList<Tank> tank = new ArrayList<Tank>();
 
 	public Panel(int jx, int jy) {
 		super();
@@ -60,7 +61,10 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 			}
 		}
 		t = new Thread(this);
-		player = new Tank(RandomSpawn(), Color.GREEN, 1);
+		player = new Tank(new Point(80, 80), Color.GREEN);
+		tank.add(new Tank(new Point(910, 80), Color.PINK));
+		tank.add(new Tank(new Point(80, 910), Color.BLUE));
+		tank.add(new Tank(new Point(910, 910), Color.GRAY));
 		// setLayout(new GridBagLayout());
 		// setLayout(new BorderLayout());
 		this.addKeyListener(this);
@@ -91,23 +95,57 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 		}
 		// System.out.println();
 		player.draw(g);
+		// System.out.println(player.p);
+		for (int i = 0; i < tank.size(); i++) {
+			tank.get(i).draw(g);
+		}
+		Random rd = new Random();
+		for (int i = 0; i < tank.size(); i++) {
+			tank.get(i).updateBarrel((int) player.p.getX(),
+					(int) player.p.getY());
+			if (rd.nextInt(30) == 5) {
+				mis.add(new Missile((int) tank.get(i).barrelX, (int) tank
+						.get(i).barrelY, tank.get(i).unitX, tank.get(i).unitY));
+			}
+			
+			if(rd.nextInt(30) == 5)
+				tank.get(i).updateMove(fx,fy,obs);
+		}
+
 		if (mis.size() > 0) {
 			for (Missile missile : mis) {
 				missile.updateMove();
 				boolean intersect = false;
-				for(Rectangle r: obs){
-					if(r.contains(missile.p)){
+				for (Rectangle r : obs) {
+					if (r.contains(missile.p)) {
 						intersect = true;
 						missile.remove();
 					}
 				}
-			
-					missile.draw(g);
+
+				for (int i = 0; i < tank.size(); i++) {
+					if (new Rectangle((int) tank.get(i).p.getX(),
+							(int) tank.get(i).p.getY(), tank.get(i).DIM_X,
+							tank.get(i).DIM_Y).contains(missile.p)) {
+						missile.remove();
+						intersect = true;
+						tank.get(i).remove();
+					}
+				}
+
+				missile.draw(g);
 			}
 		}
-		for(Iterator<Missile> iterator = mis.iterator(); iterator.hasNext();){
+		for (Iterator<Missile> iterator = mis.iterator(); iterator.hasNext();) {
 			Missile miss = iterator.next();
-			if(miss.remove){
+			if (miss.remove) {
+				iterator.remove();
+			}
+		}
+
+		for (Iterator<Tank> iterator = tank.iterator(); iterator.hasNext();) {
+			Tank t = iterator.next();
+			if (t.remove) {
 				iterator.remove();
 			}
 		}
@@ -145,12 +183,13 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 			randomY = rand.nextInt(Dim_Y);
 			intersect = false;
 			for (Rectangle r : obs) {
-				if (new Rectangle(randomY * fx, randomX * fy, 50, 50).intersects(r)) {
+				if (new Rectangle(randomY * fx, randomX * fy, 50, 50)
+						.intersects(r)) {
 					intersect = true;
 					break;
 				}
 			}
-			
+
 		}
 
 		return new Point(randomX * fx, randomY * fy);
@@ -210,8 +249,8 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// Missile shot = new Missile(player.p,player.unitX,player.unitY);
-		int x = (int) (player.p.getX() + (player.DIM_Y / 2));
-		int y = (int) (player.p.getY() + (player.DIM_Y / 2));
+		int x = player.barrelX;// (int) (player.p.getX() + (player.DIM_Y / 2));
+		int y = player.barrelY;// (int) (player.p.getY() + (player.DIM_Y / 2));
 		mis.add(new Missile(x, y, player.unitX, player.unitY));
 
 	}
