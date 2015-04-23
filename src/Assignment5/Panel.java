@@ -18,38 +18,59 @@ import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
+/**
+ * Panel Class - representing panel in the frame and all the drawing and animation
+ * @author Pongsathorn Cherngchaosil
+ *
+ */
 public class Panel extends JPanel implements KeyListener, Runnable,
 		MouseMotionListener, MouseListener {
-
-	int Dim_X, Dim_Y;
-	int fx, fy;
+	/**
+	 * Dim_X - Dimension of the map
+	 * Dim_Y - Dimension of the map
+	 * fx - Dimension of the frame
+	 * fy - Dimension of the frame
+	 */
+	int Dim_X, Dim_Y,fx,fy;
+	/** map of the game*/
 	char[][] map;
+	/** Tank that represent player*/
 	Tank player;
 	private Thread t;
+	/**
+	 * obs - list of obstacle, mainly walls
+	 * tank - list of enemy tank
+	 */
 	ArrayList<Rectangle> obs = new ArrayList<Rectangle>();
-	ArrayList<Missile> mis = new ArrayList<Missile>();
 	ArrayList<Tank> tank = new ArrayList<Tank>();
-
+	/**
+	 * Constructor for Panel
+	 * 	Initialize all tank
+	 * 	Read in map from file
+	 * @param jx - Dimension of JFrame
+	 * @param jy - Dimension of JFrame
+	 * @param diff - level of difficulty
+	 */
 	public Panel(int jx, int jy, int diff) {
 		super();
 		fx = jx;
 		fy = jy;
+		// Scanner for reading in file
 		Scanner read = null;
-
 		try {
 			read = new Scanner(new File("map1.txt"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		String input = read.nextLine();
+		//Dimension of the map
 		String[] dim = input.split("\\s+");
 		read.nextLine();
 		Dim_X = Integer.parseInt(dim[0]);
 		Dim_Y = Integer.parseInt(dim[1]);
 		map = new char[Dim_X][Dim_Y];
+		//Initialize map and all obstacles and walls
 		for (int x = 0; x < Dim_X; x++) {
 			input = read.nextLine();
 			dim = input.split("\\s+");
@@ -60,30 +81,34 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 							fy));
 			}
 		}
+		//Initialize thread
 		t = new Thread(this);
+		//Initialzie all the tank in the game
 		player = new Tank(new Point(80, 80), Color.GREEN);
 		tank.add(new Tank(new Point(910, 80), Color.PINK));
 		tank.add(new Tank(new Point(80, 910), Color.BLUE));
 		tank.add(new Tank(new Point(910, 910), Color.GRAY));
+		//Depend on the level of difficulty, remove the unnesscary tank
 		for (int i = 3 - diff; i > 0; i--) {
 			if (!tank.isEmpty()) {
 				tank.remove(0);
 			}
 		}
-		// setLayout(new GridBagLayout());
-		// setLayout(new BorderLayout());
+		
 		this.addKeyListener(this);
 		this.addMouseMotionListener(this);
 		this.addMouseListener(this);
 		setFocusable(true);
 		setBounds(0, 0, Dim_X * 80, Dim_Y * 80);
+		//Start thread
 		t.start();
-		// setSize(getXDim()*80,getYDim()*80);
-		// setBackground(Color.DARK_GRAY);
 	}
-
+	/**
+	 * Method responsible for drawing all the component on the panel
+	 */
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		//Draw the map
 		g.setColor(Color.YELLOW);
 		for (int row = 0; row < Dim_X; row++) {
 			for (int col = 0; col < Dim_Y; col++) {
@@ -91,30 +116,23 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 					g.fillRect(col * fx, row * (Dim_Y * fy / Dim_Y), fx, fy);
 			}
 		}
-
+		//If player is alive then draw player's tank
 		if (player.isAlive())
 			player.draw(g);
-		
+		//Draw existing enemy tank
 		for (int i = 0; i < tank.size(); i++) {
 			tank.get(i).draw(g);
 		}
-
-		/*if (mis.size() > 0) {
-			for (Missile missile : mis) {
-				missile.draw(g);
-			}
-		}*/
 	}
 
-
+	/**
+	 * move the plaer's tank according to the 
+	 * keypressed
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
-		// System.out.println("move");
 		player.moveTank(key, fx, fy, obs);
-		// repaint();
-		// System.out.println(player.p);
-		// this.repaint();
 
 	}
 
@@ -129,60 +147,34 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	/**
+	 * Thread responsible for updating all the component 
+	 * and animation
+	 */
 	@Override
 	public void run() {
 		Random rd = new Random();
 		while (true) {
+			//update all AI 
 			for (int i = 0; i < tank.size(); i++) {
+				//update Ai barrel
 				tank.get(i).updateBarrel((int) player.p.getX(),
 						(int) player.p.getY());
 				int rand = rd.nextInt(15);
+				//AI fire missile based on random chance
 				if (rand == 5) {
 					tank.get(i).fireMissile(tank.get(i).barrelX, tank.get(i).barrelY);
 				}
-
+				//AI move based on random chance
 				if (rd.nextInt(15) == 10)
 					tank.get(i).updateMove(fx, fy, obs);
-				
+				//check for Ai collision
 				tank.get(i).testHit(player,tank,obs);
 			}
+			//check for player's collision
 			player.testHit(player, tank,obs);
-
-			/*if (mis.size() > 0) {
-				for (Missile missile : mis) {
-					missile.updateMove();
-					boolean intersect = false;
-					for (Rectangle r : obs) {
-						if (r.contains(missile.p)) {
-							intersect = true;
-							missile.remove();
-						}
-					}
-
-					if (player.getRec().contains(missile.p)) {
-						player.reset();
-						missile.remove();
-
-					}
-					for (int i = 0; i < tank.size(); i++) {
-						if (tank.get(i).getRec().contains(missile.p)) {
-							missile.remove();
-							intersect = true;
-							tank.get(i).remove();
-						}
-					}
-
-				}
-			}*/
-			/*for (Iterator<Missile> iterator = mis.iterator(); iterator
-					.hasNext();) {
-				Missile miss = iterator.next();
-				if (miss.remove) {
-					iterator.remove();
-				}
-			}*/
-
+			//remove destroyed AI
 			for (Iterator<Tank> iterator = tank.iterator(); iterator.hasNext();) {
 				Tank t = iterator.next();
 				if (t.remove) {
@@ -190,6 +182,7 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 				}
 			}
 			repaint();
+			//stop when player is dead
 			if (!player.inGame())
 				break;
 			try {
@@ -206,7 +199,10 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 		// TODO Auto-generated method stub
 
 	}
-
+	/**
+	 * constanly update barrel of the player 
+	 * sdepend on the location of the player's mouse
+	 */
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -215,7 +211,10 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 		player.updateBarrel(x, y);
 
 	}
-
+	
+	/**
+	 * Tell the player tank to fire in the direction of the mouse
+	 */
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// Missile shot = new Missile(player.p,player.unitX,player.unitY);
@@ -249,9 +248,4 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 		// TODO Auto-generated method stub
 
 	}
-
-	/*
-	 * public void adjustBounds(int width, int height){ fx = width; fy = height;
-	 * }
-	 */
 }
