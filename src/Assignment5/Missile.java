@@ -3,9 +3,8 @@ package Assignment5;
 import java.awt.Graphics;
 import java.awt.Point;
 
-import javax.swing.JPanel;
 
-public class Missile extends JPanel{
+public class Missile {
 	Point p;
 	private double unitX;
 	private double unitY;
@@ -23,7 +22,7 @@ public class Missile extends JPanel{
 	}
 	
 	public void updateMove(){
-		p.translate((int)(unitX * 5), (int)(unitY * 5));
+		p.translate((int)(unitX * 20), (int)(unitY * 20));
 	}
 	
 	public void remove(){

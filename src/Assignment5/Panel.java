@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Panel extends JPanel implements KeyListener, Runnable,
@@ -26,7 +27,6 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 	char[][] map;
 	Tank player;
 	private Thread t;
-	private int difficulty;
 	ArrayList<Rectangle> obs = new ArrayList<Rectangle>();
 	ArrayList<Missile> mis = new ArrayList<Missile>();
 	ArrayList<Tank> tank = new ArrayList<Tank>();
@@ -65,8 +65,8 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 		tank.add(new Tank(new Point(910, 80), Color.PINK));
 		tank.add(new Tank(new Point(80, 910), Color.BLUE));
 		tank.add(new Tank(new Point(910, 910), Color.GRAY));
-		for(int i = 3 - diff; i > 0; i--){
-			if(!tank.isEmpty()){
+		for (int i = 3 - diff; i > 0; i--) {
+			if (!tank.isEmpty()) {
 				tank.remove(0);
 			}
 		}
@@ -92,46 +92,20 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 			}
 		}
 
-		player.draw(g);
+		if (player.isAlive())
+			player.draw(g);
+		
 		for (int i = 0; i < tank.size(); i++) {
 			tank.get(i).draw(g);
 		}
-		
-		if (mis.size() > 0) {
+
+		/*if (mis.size() > 0) {
 			for (Missile missile : mis) {
 				missile.draw(g);
 			}
-		}
+		}*/
 	}
 
-	public Point RandomSpawn() {
-
-		Random rand = new Random();
-		int randomX = 0;
-		int randomY = 0;
-		/*
-		 * do { randomX = rand.nextInt(Dim_X); randomY = rand.nextInt(Dim_Y);
-		 * 
-		 * } while (map[randomX][randomY] == 1);
-		 */
-
-		boolean intersect = true;
-		while (intersect) {
-			randomX = rand.nextInt(Dim_X);
-			randomY = rand.nextInt(Dim_Y);
-			intersect = false;
-			for (Rectangle r : obs) {
-				if (new Rectangle(randomY * fx, randomX * fy, 50, 50)
-						.intersects(r)) {
-					intersect = true;
-					break;
-				}
-			}
-
-		}
-
-		return new Point(randomX * fx, randomY * fy);
-	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -158,24 +132,24 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 
 	@Override
 	public void run() {
+		Random rd = new Random();
 		while (true) {
-			
-			Random rd = new Random();
 			for (int i = 0; i < tank.size(); i++) {
 				tank.get(i).updateBarrel((int) player.p.getX(),
 						(int) player.p.getY());
-				int rand = rd.nextInt(30);
+				int rand = rd.nextInt(15);
 				if (rand == 5) {
-					mis.add(new Missile((int) tank.get(i).barrelX, (int) tank
-							.get(i).barrelY, tank.get(i).unitX,
-							tank.get(i).unitY));
+					tank.get(i).fireMissile(tank.get(i).barrelX, tank.get(i).barrelY);
 				}
 
-				if ((rand) == 10)
+				if (rd.nextInt(15) == 10)
 					tank.get(i).updateMove(fx, fy, obs);
+				
+				tank.get(i).testHit(player,tank,obs);
 			}
+			player.testHit(player, tank,obs);
 
-			if (mis.size() > 0) {
+			/*if (mis.size() > 0) {
 				for (Missile missile : mis) {
 					missile.updateMove();
 					boolean intersect = false;
@@ -186,6 +160,11 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 						}
 					}
 
+					if (player.getRec().contains(missile.p)) {
+						player.reset();
+						missile.remove();
+
+					}
 					for (int i = 0; i < tank.size(); i++) {
 						if (tank.get(i).getRec().contains(missile.p)) {
 							missile.remove();
@@ -195,14 +174,14 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 					}
 
 				}
-			}
-			for (Iterator<Missile> iterator = mis.iterator(); iterator
+			}*/
+			/*for (Iterator<Missile> iterator = mis.iterator(); iterator
 					.hasNext();) {
 				Missile miss = iterator.next();
 				if (miss.remove) {
 					iterator.remove();
 				}
-			}
+			}*/
 
 			for (Iterator<Tank> iterator = tank.iterator(); iterator.hasNext();) {
 				Tank t = iterator.next();
@@ -211,13 +190,15 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 				}
 			}
 			repaint();
+			if (!player.inGame())
+				break;
 			try {
 				Thread.sleep(50);// ~60 fps
 			} catch (InterruptedException e) {
 
 			}
 		}
-
+		JOptionPane.showMessageDialog(null, "You Lost");
 	}
 
 	@Override
@@ -240,8 +221,9 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 		// Missile shot = new Missile(player.p,player.unitX,player.unitY);
 		int x = player.barrelX;// (int) (player.p.getX() + (player.DIM_Y / 2));
 		int y = player.barrelY;// (int) (player.p.getY() + (player.DIM_Y / 2));
-		mis.add(new Missile(x, y, player.unitX, player.unitY));
-		
+		//mis.add(new Missile(x, y, player.unitX, player.unitY));
+		player.fireMissile(x,y);
+
 	}
 
 	@Override
