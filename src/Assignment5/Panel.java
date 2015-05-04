@@ -161,7 +161,7 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 				//update Ai barrel
 				tank.get(i).updateBarrel((int) player.p.getX(),
 						(int) player.p.getY());
-				int rand = rd.nextInt(15);
+				int rand = rd.nextInt(5);
 				//AI fire missile based on random chance
 				if (rand == 5) {
 					tank.get(i).fireMissile(tank.get(i).barrelX, tank.get(i).barrelY);
@@ -248,4 +248,7 @@ public class Panel extends JPanel implements KeyListener, Runnable,
 		// TODO Auto-generated method stub
 
 	}
+	
+	
+	
 }
