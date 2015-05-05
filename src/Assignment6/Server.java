@@ -21,7 +21,7 @@ public class Server {
 				//String line = in.nextLine();
 				String read = in.readLine();
 				out.println(read);
-				System.out.println(read);
+				System.out.println("Player: " + read);
 			}
 		} catch (Exception e) {
 			System.out.println(e);

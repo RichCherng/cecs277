@@ -52,19 +52,19 @@ class OptionButtons extends JPanel{
 		rock = new JButton( new AbstractAction("Rock") {
 	        @Override
 	        public void actionPerformed( ActionEvent e ) {
-	            out.println("rock");
+	            out.println("r");
 	        }
 	    });
 		paper = new JButton( new AbstractAction("Paper") {
 	        @Override
 	        public void actionPerformed( ActionEvent e ) {
-	        	out.println("paper");
+	        	out.println("p");
 	        }
 	    });;
 	    scissor = new JButton( new AbstractAction("Scissor") {
 	        @Override
 	        public void actionPerformed( ActionEvent e ) {
-	        	out.println("scissor");
+	        	out.println("s");
 	        }
 	    });
 		this.setLayout(new GridBagLayout());

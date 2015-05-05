@@ -12,13 +12,17 @@ public class player {
 			System.out.println("Connected");
 			//NetThread t = new NetThread(sock, "Server");
 			//t.start();
-			Scanner in = new Scanner(System.in);
+			//Scanner in = new Scanner(System.in);
 			PrintStream out = new PrintStream(sock.getOutputStream());
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					sock.getInputStream()));
 			Frame main = new Frame(out);
-			/*while (true) {
-				//String line = in.nextLine();
-				out.println(main.getInput());
-			}*/
+			
+			while (true) {
+				String read = in.readLine();
+				//out.println(read);
+				System.out.println("Computer: " + read);
+			}
 		} catch (Exception e) {
 			System.out.println(e );
 		}
