@@ -1,11 +1,13 @@
 package Assignment6;
 
+
+import java.io.Serializable;
 /**
  * Pattern Class - Represent a pattern of character choices
  * @author Pongsathorn Cherngchaosil 012124071
  *
  */
-public class Pattern{
+public class Pattern implements Serializable {
 	//String of pattern of player's choices
 	private String pattern;
 	/**

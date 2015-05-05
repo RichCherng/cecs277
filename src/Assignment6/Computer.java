@@ -1,5 +1,6 @@
 package Assignment6;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Random;
 /**
@@ -7,7 +8,7 @@ import java.util.Random;
  * @author Pongsathorn Cherngchaosil 012124071
  *
  */
-public class Computer {
+public class Computer implements Serializable {
 	//Initialize hashmap tha will store the pattern and number of occurrences.
 	private HashMap<Pattern, Integer> hash;
 	/**

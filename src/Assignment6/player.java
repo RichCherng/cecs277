@@ -2,7 +2,6 @@ package Assignment6;
 
 import java.net.*;
 import java.io.*;
-import java.util.Scanner;
 
 public class player {
 	public static void main(String args[]) {
@@ -16,7 +15,7 @@ public class player {
 			PrintStream out = new PrintStream(sock.getOutputStream());
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					sock.getInputStream()));
-			Frame main = new Frame(out);
+			Frame main = new Frame(out,in);
 			
 			while (true) {
 				String read = in.readLine();
