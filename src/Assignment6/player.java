@@ -15,11 +15,24 @@ public class player {
 			PrintStream out = new PrintStream(sock.getOutputStream());
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					sock.getInputStream()));
-			Frame main = new Frame(out,in);
+			Frame frame = new Frame(out);
 			
 			while (true) {
 				String read = in.readLine();
 				//out.println(read);
+				/*if(read.equals("win")){
+					
+				} else if(read.equals("tie")){
+					
+				} else if(read.equals("lose")){
+					
+				}*/
+				
+				if(read.length() >= 3){
+					frame.display(read);
+				} else if (read.length() == 1){
+					frame.displayMove(read);
+				}
 				System.out.println("Computer: " + read);
 			}
 		} catch (Exception e) {
