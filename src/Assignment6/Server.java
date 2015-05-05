@@ -10,18 +10,22 @@ public class Server {
 			ServerSocket server = new ServerSocket(1235);
 			System.out.print("Waiting... ");
 			Socket sock = server.accept();
-			NetThread t = new NetThread(sock, "Client");
-			t.start();
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					sock.getInputStream()));
+			//NetThread t = new NetThread(sock, "Client");
+			//t.start();
 			System.out.println("Connected");
-			Scanner in = new Scanner(System.in);
 			PrintStream out = new PrintStream(sock.getOutputStream());
 
 			while (true) {
-				String line = in.nextLine();
-				out.println(line);
+				//String line = in.nextLine();
+				String read = in.readLine();
+				out.println(read);
+				System.out.println(read);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
+	
 }

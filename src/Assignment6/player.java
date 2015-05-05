@@ -10,15 +10,15 @@ public class player {
 			System.out.print("Waiting... ");
 			Socket sock = new Socket("localhost", 1235);
 			System.out.println("Connected");
-			NetThread t = new NetThread(sock, "Server");
-			t.start();
+			//NetThread t = new NetThread(sock, "Server");
+			//t.start();
 			Scanner in = new Scanner(System.in);
 			PrintStream out = new PrintStream(sock.getOutputStream());
-			Frame main = new Frame();
-			while (true) {
-				String line = in.nextLine();
-				out.println(line);
-			}
+			Frame main = new Frame(out);
+			/*while (true) {
+				//String line = in.nextLine();
+				out.println(main.getInput());
+			}*/
 		} catch (Exception e) {
 			System.out.println(e );
 		}
