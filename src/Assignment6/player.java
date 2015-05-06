@@ -31,7 +31,7 @@ public class player {
 				if(read.length() >= 3){
 					frame.display(read);
 				} else if (read.length() == 1){
-					frame.displayMove(read);
+					frame.displayComMove(read);
 				}
 				System.out.println("Computer: " + read);
 			}

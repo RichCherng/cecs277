@@ -41,7 +41,6 @@ public class Server {
 					out.println(predict);
 					System.out.println("Computer Predict: " + predict);
 					
-					
 					switch (computer.compare(read.charAt(0), predict)){
 					case 1:
 						//System.out.println("\nYou Win!\n");
