@@ -3,6 +3,8 @@ package Assignment6;
 import java.net.*;
 import java.io.*;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
+
 public class player {
 	public static void main(String args[]) {
 		try {
@@ -15,6 +17,7 @@ public class player {
 			PrintStream out = new PrintStream(sock.getOutputStream());
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					sock.getInputStream()));
+			
 			Frame frame = new Frame(out);
 			
 			while (true) {

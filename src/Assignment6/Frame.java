@@ -3,7 +3,6 @@ package Assignment6;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -104,10 +103,10 @@ public class Frame extends JFrame implements ActionListener{
 	public void display(String result){
 		if(result.equals("win")){
 			display.setText("Win!");
-			p_player++;
+			display.addPlayerScore();
 		}else if(result.equals("lose")){
 			display.setText("Lose!");
-			p_computer++;
+			display.addComputerScore();
 		} else if(result.equals("tie")){
 			display.setText("Tie!");
 		}
@@ -147,10 +146,23 @@ public class Frame extends JFrame implements ActionListener{
 
 class Display extends JPanel{
 	
-	JLabel textBox;
-	JLabel left,right;
+	JLabel textBox,left,right,playerTag, comTag,scorePlayer, scoreComputer;
+	int p_player = 0;
+	int p_computer = 0;;
 	public Display(){
 		this.setBackground(Color.GRAY);
+		
+		scorePlayer = new JLabel(p_player + "",SwingConstants.CENTER);
+		scoreComputer = new JLabel(p_computer + "",SwingConstants.CENTER);
+		
+		playerTag = new JLabel("player",SwingConstants.CENTER);
+		playerTag.setFont(new Font("Verdana",1,16));
+		playerTag.setPreferredSize(new Dimension(150,50));
+		
+		comTag = new JLabel("Computer",SwingConstants.CENTER);
+		comTag.setFont(new Font("Verdana",1,16));
+		comTag.setPreferredSize(new Dimension(150,50));
+		
 		textBox = new JLabel("",SwingConstants.CENTER);
 		textBox.setFont(new Font("Verdana",1,20));
 		textBox.setBackground(Color.BLACK);
@@ -162,10 +174,31 @@ class Display extends JPanel{
 		right.setPreferredSize(new Dimension(150,92));
 		right.setBackground(Color.BLACK);
 
-		this.setLayout(new FlowLayout());
-		this.add(left);
-		this.add(textBox);
-		this.add(right);
+		GridBagConstraints c = new GridBagConstraints();
+		this.setLayout(new  GridBagLayout());
+		c.gridx = 0;
+		c.gridy = 1;
+		c.weightx = .5;
+		c.weighty = .5;
+		this.add(left,c);
+		c.gridx = 1;
+		c.gridy = 1;
+		this.add(textBox,c);
+		c.gridx = 2;
+		c.gridy = 1;
+		this.add(right,c);
+		c.gridx = 0;
+		c.gridy = 0;
+		this.add(playerTag,c);
+		c.gridx = 2;
+		c.gridy = 0;
+		this.add(comTag,c);
+		c.gridx = 0;
+		c.gridy = 2;
+		this.add(scorePlayer,c);
+		c.gridx = 2;
+		c.gridy = 2;
+		this.add(scoreComputer,c);
 		//this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 	}
 	
@@ -179,6 +212,15 @@ class Display extends JPanel{
 	
 	public void LeftDisplay(Image img){
 		left.setIcon(new ImageIcon(img));
+	}
+	
+	public void addPlayerScore(){
+		scorePlayer.setText((p_player++)+"");
+		
+	}
+	
+	public void addComputerScore(){
+		scoreComputer.setText((p_computer++)+"");
 	}
 	/*class Label extends JPanel{
 		public Label(){
@@ -194,7 +236,8 @@ class Display extends JPanel{
 
 class OptionButtons extends JPanel{
 	
-	JButton rock, paper, scissor;
+	private JButton rock, paper, scissor;
+	private String[] optImg = {"h_rock.jpg","h_paper.jpg","h_scissors.jpg"};
 	public OptionButtons(final PrintStream out,final String[] imgFile,final Display display){
 		//this.setBackground(Color.RED);
 		rock = new JButton( new AbstractAction("Rock") {
@@ -235,9 +278,19 @@ class OptionButtons extends JPanel{
 	        }
 	    });
 		this.setLayout(new GridBagLayout());
-		//rock.setPreferredSize(new Dimension(50,50));
-		//paper.setPreferredSize(new Dimension(50,50));
-		//scissor.setPreferredSize(new Dimension(50,50));
+		rock.setPreferredSize(new Dimension(90,100));
+		paper.setPreferredSize(new Dimension(90,100));
+		scissor.setPreferredSize(new Dimension(90,100));
+		
+		try {
+			rock.setIcon(new ImageIcon(ImageIO.read(new File(optImg[0]))));
+			paper.setIcon(new ImageIcon(ImageIO.read(new File(optImg[1]))));
+			scissor.setIcon(new ImageIcon(ImageIO.read(new File(optImg[2]))));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(4,4,4,4);
 		c.weightx = .5;
