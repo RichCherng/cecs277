@@ -128,7 +128,7 @@ public class Hero extends Character implements Serializable{
 	 * @param l current map
 	 * @return the element of the next room, 'n' if invalid move
 	 */
-	public char gotEast(Level l){
+	public char goEast(Level l){
 		char temp;
 		Point loc =  new Point((int)location.getX()+1,(int)location.getY());
 		if( (temp = l.getRoom(loc)) == 'n'){

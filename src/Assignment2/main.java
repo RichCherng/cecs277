@@ -193,7 +193,7 @@ public class Main {
 						map_Element = hero.goSouth(map);
 						break;
 					case 3:
-						map_Element = hero.gotEast(map);
+						map_Element = hero.goEast(map);
 						break;
 					case 4:
 						map_Element = hero.goWest(map);
@@ -264,7 +264,7 @@ public class Main {
 			map_Element = hero.goSouth(map);
 			break;
 		case 3:
-			map_Element = hero.gotEast(map);
+			map_Element = hero.goEast(map);
 			break;
 		case 4:
 			map_Element = hero.goWest(map);
